@@ -16,7 +16,7 @@ def detect_beep(indata, frames, time, status):
     # Calculate frequency spectrum
     spectrum = np.abs(np.fft.rfft(audio_data))
     frequencies = np.fft.rfftfreq(len(audio_data), 1 / SAMPLE_RATE)
-    print("frequencies: ", frequencies)
+    print("frequencies: ", frequencies[0])
     
     # Look for peaks in typical beep frequency range (1000-4000 Hz)
     beep_range = (frequencies >= LOWER_FREQ) & (frequencies <= UPPER_FREQ)
