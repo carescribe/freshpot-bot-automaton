@@ -4,6 +4,7 @@ from scipy.signal import find_peaks
 
 LOWER_FREQ=3500
 UPPER_FREQ=4200
+np.set_printoptions(threshold=np.inf)
 
 def detect_beep(indata, frames, time, status):
     # Convert audio data to mono if stereo
