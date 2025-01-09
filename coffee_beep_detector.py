@@ -2,6 +2,9 @@ import sounddevice as sd
 import numpy as np
 from scipy.signal import find_peaks
 
+LOWER_FREQ=3500
+UPPER_FREQ=4200
+
 def detect_beep(indata, frames, time, status):
     # Convert audio data to mono if stereo
     if len(indata.shape) == 2:
@@ -12,10 +15,13 @@ def detect_beep(indata, frames, time, status):
     # Calculate frequency spectrum
     spectrum = np.abs(np.fft.rfft(audio_data))
     frequencies = np.fft.rfftfreq(len(audio_data), 1 / SAMPLE_RATE)
+    print("frequencies: ", frequencies)
     
     # Look for peaks in typical beep frequency range (1000-4000 Hz)
-    beep_range = (frequencies >= 1000) & (frequencies <= 4000)
+    beep_range = (frequencies >= LOWER_FREQ) & (frequencies <= UPPER_FREQ)
+#    print(f"{beep_range}")
     peaks, _ = find_peaks(spectrum[beep_range], height=0.1)
+#    print(peaks)
     
     if len(peaks) > 0:
         print("BEEP DETECTED")
