@@ -1,12 +1,22 @@
 import sounddevice as sd
 import numpy as np
 from scipy.signal import find_peaks
+import soundfile as sf
 
 LOWER_FREQ=3500
 UPPER_FREQ=4200
 np.set_printoptions(threshold=np.inf)
 
+# Add these global variables
+all_audio_data = []
+CHANNELS = 1
+
 def detect_beep(indata, frames, time, status):
+    global all_audio_data
+    
+    # Store the audio data
+    all_audio_data.append(indata.copy())
+    
     # Convert audio data to mono if stereo
     if len(indata.shape) == 2:
         audio_data = indata[:, 0]
@@ -34,14 +44,19 @@ BLOCK_SIZE = 2048
 try:
     # Start continuous audio stream
     with sd.InputStream(callback=detect_beep,
-                       channels=1,
+                       channels=CHANNELS,
                        samplerate=SAMPLE_RATE,
                        blocksize=BLOCK_SIZE):
         print("Listening for beeps... Press Ctrl+C to stop")
         while True:
-            sd.sleep(100)  # Keep the stream running
+            sd.sleep(100)
 
 except KeyboardInterrupt:
     print("\nStopping beep detection")
+    # Save the recorded audio to file
+    if all_audio_data:
+        audio_data = np.concatenate(all_audio_data, axis=0)
+        sf.write('coffee.wav', audio_data, SAMPLE_RATE)
+        print("Audio saved to coffee.wav")
 except Exception as e:
     print(f"Error: {str(e)}") 
