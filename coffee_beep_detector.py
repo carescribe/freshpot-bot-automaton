@@ -15,7 +15,7 @@ def detect_beep(indata, frames, time, status):
     global all_audio_data
     
     # Store the audio data
-    all_audio_data.append(indata.copy())
+    # all_audio_data.append(indata.copy())
     
     # Convert audio data to mono if stereo
     if len(indata.shape) == 2:
@@ -39,7 +39,7 @@ def detect_beep(indata, frames, time, status):
 
 # Audio stream parameters
 SAMPLE_RATE = 44100
-BLOCK_SIZE = 2048
+BLOCK_SIZE = 10000
 
 try:
     # Start continuous audio stream
@@ -53,10 +53,10 @@ try:
 
 except KeyboardInterrupt:
     print("\nStopping beep detection")
-    # Save the recorded audio to file
-    if all_audio_data:
-        audio_data = np.concatenate(all_audio_data, axis=0)
-        sf.write('coffee.wav', audio_data, SAMPLE_RATE)
-        print("Audio saved to coffee.wav")
+    # # Save the recorded audio to file
+    # if all_audio_data:
+    #     audio_data = np.concatenate(all_audio_data, axis=0)
+    #     sf.write('coffee.wav', audio_data, SAMPLE_RATE)
+    #     print("Audio saved to coffee.wav")
 except Exception as e:
     print(f"Error: {str(e)}") 
